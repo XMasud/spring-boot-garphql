@@ -11,3 +11,7 @@ type Query {
     getProductById(id: ID!): Product
 }
 
+type Mutation {
+    createProduct(name: String!, description: String, price: Float!, stock: Int!): Product
+    deleteProductById(id: ID!): String
+}
