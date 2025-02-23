@@ -20,11 +20,27 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @Operation(summary = "Create a new product")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Product created successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Product.class)) }),
+            @ApiResponse(responseCode = "400", description = "Invalid request body",
+                    content = @Content)
+    })
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
         return new ResponseEntity<>(productService.createProduct(productDto), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Get all products")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of products retrieved",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Product.class)) }),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content)
+    })
     @GetMapping
     public ResponseEntity<Iterable<ProductDto>> getAllProducts() {
         return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
@@ -44,6 +60,12 @@ public class ProductController {
         return new ResponseEntity<>(productService.getProductById(id), HttpStatus.OK);
     }
 
+    @Operation(summary = "Delete a product by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Product deleted successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProductById(@PathVariable Long id) {
         productService.deleteProductById(id);
